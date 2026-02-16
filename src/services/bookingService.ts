@@ -24,6 +24,7 @@ export const bookingService = {
     if (filter.page) params.append('page', filter.page.toString());
     if (filter.pageSize) params.append('pageSize', filter.pageSize.toString());
     
+    console.log('Fetching bookings with params:', params.toString());
     const response = await api.get<BookingResponse>(`/bookings?${params}`);
     return response.data;
   },
@@ -36,30 +37,35 @@ export const bookingService = {
 
   // Create new booking
   createBooking: async (data: CreateBookingDto) => {
+    console.log('Creating booking:', data);
     const response = await api.post<Booking>('/bookings', data);
     return response.data;
   },
 
   // Update booking
   updateBooking: async (id: number, data: UpdateBookingDto) => {
+    console.log('Updating booking:', { id, data });
     const response = await api.put(`/bookings/${id}`, data);
     return response.data;
   },
 
   // Delete booking (soft delete)
   deleteBooking: async (id: number) => {
+    console.log('Deleting booking:', id);
     const response = await api.delete(`/bookings/${id}`);
-    return response.data;
+    return { success: true, message: 'Booking deleted successfully' };
   },
 
   // Update booking status
   updateStatus: async (id: number, data: UpdateStatusDto) => {
+    console.log('Updating booking status:', { id, data });
     const response = await api.patch(`/bookings/${id}/status`, data);
     return response.data;
   },
 
   // Get booking history
   getBookingHistory: async (id: number) => {
+    console.log('Fetching booking history for:', id);
     const response = await api.get<BookingHistory[]>(`/bookings/${id}/history`);
     return response.data;
   },
