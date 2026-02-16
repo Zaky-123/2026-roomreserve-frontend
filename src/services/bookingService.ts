@@ -49,10 +49,11 @@ export const bookingService = {
     return response.data;
   },
 
-  // Delete booking (soft delete)
-  deleteBooking: async (id: number) => {
+    // Delete booking (soft delete)
+   deleteBooking: async (id: number) => {
     console.log('Deleting booking:', id);
     const response = await api.delete(`/bookings/${id}`);
+    console.log('Delete response:', response);
     return { success: true, message: 'Booking deleted successfully' };
   },
 

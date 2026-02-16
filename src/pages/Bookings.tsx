@@ -6,6 +6,7 @@ import BookingForm from '../components/Booking/BookingForm';
 import BookingStatusModal from '../components/Booking/BookingStatusModal';
 import BookingHistoryModal from '../components/Booking/BookingHistoryModal';
 import { Booking } from '../types/booking.types';
+import { bookingService } from '../services/bookingService';
 
 const Bookings: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
@@ -23,6 +24,16 @@ const Bookings: React.FC = () => {
     setSelectedBooking(booking);
     setShowForm(true);
   };
+
+  const handleDelete = async (booking: Booking) => {
+    if (!window.confirm(`Hapus peminjaman oleh ${booking.borrowerName}?`)) {
+        return;
+    }
+
+    await bookingService.deleteBooking(booking.id);
+    setRefreshKey(prev => prev + 1);
+    alert('Peminjaman berhasil dihapus');
+ };
 
   const handleView = (booking: Booking) => {
     alert(`Detail booking ${booking.id} - Coming soon`);
@@ -60,6 +71,7 @@ const Bookings: React.FC = () => {
         onView={handleView}
         onStatusChange={handleStatusChange}
         onHistory={handleHistory}
+        onDelete={handleDelete}
       />
 
       <BookingForm
