@@ -11,13 +11,15 @@ interface BookingListProps {
   onView: (booking: Booking) => void;
   onStatusChange: (booking: Booking) => void;
   onHistory: (booking: Booking) => void;
+  onDelete: (booking: Booking) => void;
 }
 
 const BookingList: React.FC<BookingListProps> = ({ 
   onEdit, 
   onView, 
   onStatusChange, 
-  onHistory 
+  onHistory,
+  onDelete 
 }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
@@ -84,7 +86,7 @@ const BookingList: React.FC<BookingListProps> = ({
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     fetchBookings();
-  };
+  }
 
   const handlePageChange = (newPage: number) => {
     setFilter(prev => ({ ...prev, page: newPage }));
@@ -296,19 +298,14 @@ const BookingList: React.FC<BookingListProps> = ({
                     )}
                     
                     {booking.status === 'Pending' && (
-                      <Button
+                    <Button
                         variant="outline-danger"
                         size="sm"
-                        onClick={() => {
-                          if (window.confirm('Hapus peminjaman ini?')) {
-                            // TODO: Implement delete
-                            console.log('Delete booking:', booking.id);
-                          }
-                        }}
+                        onClick={() => onDelete(booking)}
                         title="Hapus"
-                      >
+                    >
                         <FaTrash />
-                      </Button>
+                    </Button>
                     )}
                     
                     <Button
