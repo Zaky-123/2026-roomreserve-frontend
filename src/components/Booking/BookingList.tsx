@@ -34,7 +34,6 @@ const BookingList: React.FC<BookingListProps> = ({
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      console.log('Fetching with filter:', filter);
       const response = await bookingService.getBookings(filter);
       setBookings(response.items);
       setTotalPages(response.totalPages);
@@ -64,11 +63,8 @@ const BookingList: React.FC<BookingListProps> = ({
     fetchRooms();
   }, []);
 
-  // PERBAIKAN: Gunakan tipe yang lebih spesifik untuk setiap input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log(`Input changed: ${name} = ${value}`);
-    
     setFilter(prev => ({
       ...prev,
       [name]: value === '' ? undefined : value,
@@ -78,8 +74,6 @@ const BookingList: React.FC<BookingListProps> = ({
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    console.log(`Select changed: ${name} = ${value}`);
-    
     setFilter(prev => ({
       ...prev,
       [name]: value === '' ? undefined : value,
@@ -89,7 +83,6 @@ const BookingList: React.FC<BookingListProps> = ({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Search submitted with filter:', filter);
     fetchBookings();
   };
 
@@ -143,7 +136,7 @@ const BookingList: React.FC<BookingListProps> = ({
                 type="text"
                 name="search"
                 value={filter.search || ''}
-                onChange={handleInputChange}  // Gunakan handleInputChange untuk text input
+                onChange={handleInputChange}
                 placeholder="Nama/Email/Tujuan..."
               />
             </Form.Group>
@@ -154,7 +147,7 @@ const BookingList: React.FC<BookingListProps> = ({
               <Form.Select
                 name="roomId"
                 value={filter.roomId || ''}
-                onChange={handleSelectChange}  // Gunakan handleSelectChange untuk select
+                onChange={handleSelectChange}
               >
                 <option value="">Semua Ruangan</option>
                 {rooms.map(room => (
@@ -169,7 +162,7 @@ const BookingList: React.FC<BookingListProps> = ({
               <Form.Select
                 name="status"
                 value={filter.status || ''}
-                onChange={handleSelectChange}  // Gunakan handleSelectChange untuk select
+                onChange={handleSelectChange}
               >
                 <option value="">Semua Status</option>
                 <option value="Pending">Menunggu</option>
@@ -187,7 +180,7 @@ const BookingList: React.FC<BookingListProps> = ({
                 type="date"
                 name="startDate"
                 value={filter.startDate || ''}
-                onChange={handleInputChange}  // Gunakan handleInputChange untuk date input
+                onChange={handleInputChange}
               />
             </Form.Group>
           </Col>
@@ -198,7 +191,7 @@ const BookingList: React.FC<BookingListProps> = ({
                 type="date"
                 name="endDate"
                 value={filter.endDate || ''}
-                onChange={handleInputChange}  // Gunakan handleInputChange untuk date input
+                onChange={handleInputChange}
               />
             </Form.Group>
           </Col>
