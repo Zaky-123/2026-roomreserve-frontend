@@ -1,37 +1,45 @@
-import React from 'react';
-import { Button, Table } from 'react-bootstrap';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { Container } from 'react-bootstrap';
+import RoomList from '../components/Room/RoomList';
+import RoomForm from '../components/Room/RoomForm';
+import { Room } from '../types/room.types';
 
 const Rooms: React.FC = () => {
-  return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Manajemen Ruangan</h1>
-        <Button variant="primary">
-          <FaPlus style={{ marginRight: '8px' }} /> Tambah Ruangan
-        </Button>
-      </div>
+  const [showModal, setShowModal] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Kode</th>
-            <th>Nama Ruangan</th>
-            <th>Kapasitas</th>
-            <th>Lokasi</th>
-            <th>Status</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colSpan={6} className="text-center">
-              Belum ada data ruangan
-            </td>
-          </tr>
-        </tbody>
-      </Table>
-    </div>
+  const handleAdd = () => {
+    setSelectedRoom(null);
+    setShowModal(true);
+  };
+
+  const handleEdit = (room: Room) => {
+    setSelectedRoom(room);
+    setShowModal(true);
+  };
+
+  const handleSuccess = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
+  return (
+    <Container>
+      <h1 className="mb-4">Manajemen Ruangan</h1>
+      
+      <RoomList
+        key={refreshKey}
+        onEdit={handleEdit}
+        onAdd={handleAdd}
+      />
+
+      <RoomForm
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        onSuccess={handleSuccess}
+        room={selectedRoom}
+      />
+    </Container>
   );
 };
 

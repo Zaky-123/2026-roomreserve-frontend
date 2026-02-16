@@ -17,9 +17,14 @@ export interface CreateRoomDto {
   description?: string;
 }
 
-export interface UpdateRoomDto extends CreateRoomDto {
+export interface UpdateRoomDto {
   id: number;
-  status: 'Available' | 'UnderMaintenance' | 'Occupied';
+  code: string;
+  name: string;
+  capacity: number;
+  location: string;
+  description?: string;
+  status: number;  // ✅ Sekarang number (0,1,2)
 }
 
 export interface RoomResponse {
