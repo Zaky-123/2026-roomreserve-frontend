@@ -5,128 +5,149 @@ Semua perubahan penting pada frontend akan dicatat di file ini.
 Format berdasarkan [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 dan proyek ini mengikuti [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0-frontend] - 2026-02-16
+
+### ğŸ‰ Rilis Kedua - Complete Booking Management
+
+#### âœ¨ Fitur Baru
+
+**Booking List (Issue #5)**
+- Tabel daftar peminjaman dengan kolom lengkap:
+  - Ruangan (kode + nama)
+  - Peminjam (nama + email)
+  - Kontak (telepon)
+  - Waktu Mulai dan Selesai (format dd MMM yyyy HH:mm)
+  - Tujuan
+  - Status (badge warna)
+  - Aksi (tombol dinamis)
+
+- **Filter dan Pencarian:**
+  - ğŸ” Search by nama/email/tujuan
+  - ğŸ¢ Filter by ruangan (dropdown dari API)
+  - ğŸ“Š Filter by status (Pending/Approved/Rejected/Cancelled/Completed)
+  - ğŸ“… Filter by date range (startDate, endDate)
+  - ğŸ“„ Pagination dengan navigasi halaman (5 halaman + ellipsis)
+
+- **Action Buttons Dinamis:**
+  - ğŸ‘ï¸ Detail (semua status)
+  - âœï¸ Edit (hanya Pending)
+  - âœ… Ubah Status (Pending & Approved)
+  - ğŸ—‘ï¸ Hapus (hanya Pending)
+  - ğŸ“‹ Riwayat (semua status)
+
+**Booking Form (Issue #6)**
+- Form modal untuk tambah dan edit peminjaman
+- Dropdown ruangan dari API (hanya menampilkan ruangan Available)
+- Validasi lengkap:
+  - âœ… Ruangan wajib dipilih
+  - âœ… Nama wajib (max 100 karakter)
+  - âœ… Email wajib dengan format valid
+  - âœ… Telepon wajib (10-13 digit angka)
+  - âœ… Waktu mulai tidak boleh di masa lalu
+  - âœ… Waktu selesai harus setelah waktu mulai
+- Default waktu otomatis: besok jam 09:00-10:00
+- Loading state saat submit
+- Error handling untuk 409 conflict (double booking)
+- Field notes untuk tujuan peminjaman (max 500 karakter)
+
+**Status Management (Issue #7)**
+- Modal `BookingStatusModal` untuk mengubah status
+- Dynamic status options berdasarkan status saat ini:
+  - **Pending** â†’ Approved / Rejected / Cancelled
+  - **Approved** â†’ Completed / Cancelled
+  - **Rejected** / **Cancelled** / **Completed** (final - no options)
+- Notes field untuk catatan perubahan
+- Validasi client-side
+- Error handling dari backend
+- Info alur status yang valid
+
+**History Tracking (Issue #8)**
+- Modal `BookingHistoryModal` untuk melihat riwayat
+- Tabel dengan kolom:
+  - Waktu (format dd MMM yyyy HH:mm:ss, locale Indonesia)
+  - Status Lama (badge warna)
+  - Status Baru (badge warna)
+  - Catatan
+  - Diubah Oleh
+- Loading state dengan spinner
+- Error state dengan alert
+- Empty state jika belum ada riwayat
+
+#### ğŸ› Perbaikan Bug
+- Perbaiki TypeScript error pada event handler (split input/select handlers)
+- Perbaiki module export issues di semua komponen
+- Perbaiki error 400 Bad Request (status dikirim sebagai number)
+- Perbaiki double booking detection
+- Perbaiki format tanggal dengan locale Indonesia
+
+#### ğŸ”§ Teknis
+- TypeScript interfaces untuk semua props dan state
+- Error handling komprehensif untuk semua API calls
+- Loading states untuk semua operasi async
+- Format tanggal menggunakan date-fns dengan locale id
+- Mapping status ke teks Indonesia
+- Integrasi penuh dengan backend API
+
 ## [1.0.0-frontend] - 2026-02-16
 
-### í¾‰ Rilis Pertama - Room Management UI
+### ğŸ‰ Rilis Pertama - Room Management UI
 
 #### âœ¨ Fitur Baru
 
 **Setup Proyek**
-- Inisialisasi React + TypeScript dengan `create-react-app`
-- Struktur folder yang rapi (components, pages, services, types)
-- Konfigurasi Axios untuk komunikasi API
-- Integrasi React Bootstrap untuk UI components
-- Setup React Router untuk navigasi
-- Environment variables dengan `.env.example`
+- Inisialisasi React + TypeScript
+- Struktur folder (components, pages, services, types)
+- Konfigurasi Axios untuk API
+- React Bootstrap untuk UI
+- React Router untuk navigasi
+- Environment variables
 
-**Manajemen Ruangan (Room CRUD)**
+**Room Management**
 - **RoomList Component**
-  - Tabel daftar ruangan dengan kolom lengkap
-  - Status badge dengan warna berbeda:
-    - í¿¢ `Available` (Tersedia) - Hijau
-    - í¿¡ `UnderMaintenance` (Dalam Perawatan) - Kuning
-    - í´´ `Occupied` (Sedang Dipakai) - Merah
-  - Search functionality (cari berdasarkan nama/kode/lokasi)
-  - Pagination dengan navigasi halaman
-  - Tombol aksi Edit dan Delete
-  - Loading state saat mengambil data
+  - Tabel daftar ruangan
+  - Status badge dengan warna:
+    - ğŸŸ¢ Available (Tersedia) - Hijau
+    - ğŸŸ¡ UnderMaintenance - Kuning
+    - ğŸ”´ Occupied - Merah
+  - Search functionality
+  - Pagination
+  - Tombol Edit dan Delete
 
 - **RoomForm Component**
-  - Modal form untuk tambah dan edit ruangan
-  - Field: Code, Name, Capacity, Location, Description, Status (untuk edit)
-  - Validasi client-side:
-    - Required fields
-    - Code: 2-10 karakter
-    - Name: maksimal 100 karakter
-    - Capacity: 1-500 orang
-    - Location: maksimal 200 karakter
-    - Description: maksimal 500 karakter
-  - Disable field Code saat mode edit (tidak bisa diubah)
-  - Loading spinner saat submit
-  - Auto-refresh list setelah sukses
+  - Modal form tambah/edit ruangan
+  - Field: Code, Name, Capacity, Location, Description, Status
+  - Validasi client-side
+  - Disable field Code saat mode edit
+  - Loading spinner
+  - Auto-refresh list
 
 - **Integrasi API**
-  - `roomService.ts` dengan semua method CRUD
-  - Error handling untuk response 400 (validation errors)
-  - Error handling untuk response 409 (duplicate code)
-  - Error handling untuk network errors
-  - Logging untuk debugging
+  - roomService dengan semua method CRUD
+  - Error handling untuk response 400, 409
+  - Mapping status string ke number (0,1,2)
 
-#### í°› Perbaikan Bug
-
-- **Error 400 Bad Request saat update ruangan**
-  - Penyebab: Status dikirim sebagai string ("Available")
-  - Solusi: Mapping status ke number (0,1,2) sebelum dikirim
-  - Detail mapping: `Available: 0`, `UnderMaintenance: 1`, `Occupied: 2`
-
-- **TypeScript errors**
-  - Perbaikan typing untuk UpdateRoomDto (status sebagai number)
-  - Perbaikan error handling dengan type guard
-
-- **ID mismatch validation**
-  - Validasi ID di URL dan ID di body sebelum request
-
-#### í³š Dokumentasi
-
-- **README.md** lengkap dengan:
-  - Deskripsi proyek dan fitur
-  - Teknologi yang digunakan
-  - Struktur folder
-  - Cara instalasi dan menjalankan
-  - Dokumentasi API integration
-  - Roadmap pengembangan
-
-- **CHANGELOG.md** dengan:
-  - Format Keep a Changelog
-  - Catatan detail setiap perubahan
-  - Kategorisasi Added, Fixed, Changed
-
-#### í´§ Teknis
-
-- **State Management**: React hooks (useState, useEffect)
-- **Styling**: React Bootstrap + custom CSS
-- **HTTP Client**: Axios dengan interceptor
-- **Type Safety**: TypeScript interfaces untuk semua data
-- **Error Handling**: Try-catch dengan user-friendly messages
-- **Loading States**: Spinner dan disabled buttons
+#### ğŸ› Perbaikan Bug
+- Error 400 Bad Request saat update ruangan
+- TypeScript errors pada event handler
+- ID mismatch validation
 
 ## [Unreleased]
 
-### Rencana Fitur (v1.1.0-frontend)
+### Rencana Fitur (v1.2.0-frontend)
+- [ ] **Dashboard** dengan statistik dan grafik
+- [ ] **Export data** ke Excel/PDF
+- [ ] **Autentikasi** (Login/Register)
+- [ ] **Notifikasi** real-time
+- [ ] **Dark mode** toggle
 
-#### íº§ Dalam Pengembangan
-- [ ] **Manajemen Peminjaman (Booking CRUD)**
-  - [ ] Halaman daftar peminjaman dengan filter
-  - [ ] Form tambah peminjaman dengan validasi
-  - [ ] Conflict detection (double booking prevention)
-  - [ ] Edit dan delete peminjaman
-
-- [ ] **Status Management**
-  - [ ] Tombol Approve/Reject di list booking
-  - [ ] Modal konfirmasi dengan notes
-  - [ ] Update status via API
-
-- [ ] **Filter dan Pencarian**
-  - [ ] Filter by status
-  - [ ] Filter by tanggal
-  - [ ] Filter by ruangan
-  - [ ] Search by peminjam
-
-- [ ] **Booking History**
-  - [ ] Modal timeline perubahan status
-  - [ ] Integrasi API history
-
-- [ ] **Dashboard**
-  - [ ] Statistik ruangan dan peminjaman
-  - [ ] Grafik penggunaan ruangan
-
-## í³Š Riwayat Versi
+## ğŸ“Š Riwayat Versi
 
 | Versi | Tanggal | Deskripsi |
 |-------|---------|-----------|
-| v1.0.0-frontend | 2026-02-16 | Rilis pertama - Manajemen Ruangan |
+| v1.1.0-frontend | 2026-02-16 | Complete Booking Management (List, Form, Status, History) |
+| v1.0.0-frontend | 2026-02-16 | Room Management UI |
 
-## í±¤ Kontributor
+## ğŸ‘¤ Kontributor
 
 - **Zaky** - Pengembang utama
 
