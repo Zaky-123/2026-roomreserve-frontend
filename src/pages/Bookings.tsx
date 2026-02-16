@@ -3,10 +3,14 @@ import { Container, Button } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import BookingList from '../components/Booking/BookingList';
 import BookingForm from '../components/Booking/BookingForm';
+import BookingStatusModal from '../components/Booking/BookingStatusModal';
+import BookingHistoryModal from '../components/Booking/BookingHistoryModal';
 import { Booking } from '../types/booking.types';
 
 const Bookings: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -21,23 +25,24 @@ const Bookings: React.FC = () => {
   };
 
   const handleView = (booking: Booking) => {
-    // TODO: Implement detail view
     alert(`Detail booking ${booking.id} - Coming soon`);
   };
 
   const handleStatusChange = (booking: Booking) => {
-    // TODO: Implement status change
-    alert(`Ubah status booking ${booking.id} - Coming soon`);
+    setSelectedBooking(booking);
+    setShowStatusModal(true);
   };
 
   const handleHistory = (booking: Booking) => {
-    // TODO: Implement history view
-    alert(`Riwayat booking ${booking.id} - Coming soon`);
+    setSelectedBooking(booking);
+    setShowHistoryModal(true);
   };
 
   const handleSuccess = () => {
     setRefreshKey(prev => prev + 1);
     setShowForm(false);
+    setShowStatusModal(false);
+    setShowHistoryModal(false);
   };
 
   return (
@@ -61,6 +66,19 @@ const Bookings: React.FC = () => {
         show={showForm}
         onHide={() => setShowForm(false)}
         onSuccess={handleSuccess}
+        booking={selectedBooking}
+      />
+
+      <BookingStatusModal
+        show={showStatusModal}
+        onHide={() => setShowStatusModal(false)}
+        onSuccess={handleSuccess}
+        booking={selectedBooking}
+      />
+
+      <BookingHistoryModal
+        show={showHistoryModal}
+        onHide={() => setShowHistoryModal(false)}
         booking={selectedBooking}
       />
     </Container>
