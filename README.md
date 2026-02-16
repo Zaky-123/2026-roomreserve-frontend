@@ -1,46 +1,167 @@
-# Getting Started with Create React App
+# Room Reservation Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React + TypeScript frontend untuk Sistem Peminjaman Ruangan Kampus.  
+Aplikasi ini mengkonsumsi API dari backend ASP.NET Core yang telah dibangun sebelumnya.
 
-## Available Scripts
+## ✨ Fitur (v1.0.0-frontend)
 
-In the project directory, you can run:
+### ✅ Manajemen Ruangan (Room CRUD)
+- **List Ruangan** - Tabel daftar ruangan dengan:
+  - Kolom: Kode, Nama, Kapasitas, Lokasi, Status, Aksi
+  - Status badge dengan warna (Hijau: Tersedia, Kuning: Perawatan, Merah: Dipakai)
+  - Search berdasarkan nama/kode/lokasi
+  - Pagination untuk navigasi data
+  - Tombol Edit dan Delete
 
-### `npm start`
+- **Tambah Ruangan** - Form modal dengan:
+  - Validasi input (required, min/max length, range)
+  - Error handling dari backend
+  - Loading state saat submit
+  - Auto-refresh list setelah sukses
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Edit Ruangan** - Form modal dengan:
+  - Data terisi otomatis
+  - Validasi sama seperti create
+  - Status dapat diubah (dikirim sebagai number 0/1/2 ke backend)
+  - Kode ruangan tidak bisa diubah (readonly)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- **Hapus Ruangan** - Soft delete dengan:
+  - Konfirmasi dialog
+  - Feedback setelah sukses
+  - Auto-refresh list
 
-### `npm test`
+## ��� Teknologi
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **React 18** - Library UI
+- **TypeScript** - Type safety
+- **React Bootstrap** - Komponen UI
+- **React Router DOM** - Routing
+- **Axios** - HTTP client untuk API
+- **React Icons** - Icons
+- **Date-fns** - Manipulasi tanggal (untuk booking nanti)
 
-### `npm run build`
+## ��� Struktur Folder
+src/
+├── components/ # Komponen React
+│ ├── Room/ # Komponen untuk manajemen ruangan
+│ │ ├── RoomList.tsx # Tabel daftar ruangan
+│ │ └── RoomForm.tsx # Form tambah/edit ruangan
+│ └── Layout/ # Komponen layout
+│ ├── Navbar.tsx # Navigasi atas
+│ └── Layout.tsx # Layout wrapper
+├── pages/ # Halaman utama
+│ ├── Dashboard.tsx # Dashboard (belum diisi)
+│ ├── Rooms.tsx # Halaman manajemen ruangan
+│ └── Bookings.tsx # Halaman peminjaman (coming soon)
+├── services/ # API calls
+│ ├── api.ts # Konfigurasi axios
+│ └── roomService.ts # Service untuk Room API
+├── types/ # TypeScript interfaces
+│ ├── room.types.ts # Types untuk Room
+│ └── booking.types.ts # Types untuk Booking (coming soon)
+├── utils/ # Helper functions
+├── assets/ # Gambar, CSS
+├── App.tsx # Routing utama
+└── index.tsx # Entry point
+## ��� Instalasi dan Menjalankan
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prasyarat
+- Node.js 16+
+- npm atau yarn
+- Backend harus berjalan di `http://localhost:5243`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Langkah-langkah
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/Zaky-123/2026-roomreserve-frontend.git
+   cd 2026-roomreserve-frontend
+Install dependencies
 
-### `npm run eject`
+bash
+npm install
+Setup environment
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+bash
+cp .env.example .env
+# Edit .env jika perlu (default sudah指向 backend)
+Jalankan backend (di terminal terpisah)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+bash
+cd ../backend
+dotnet run
+# Backend akan berjalan di http://localhost:5243
+Jalankan frontend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+bash
+npm start
+Akses aplikasi
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+text
+http://localhost:3000
+��� Environment Variables
+VariableDescriptionDefault
+REACT_APP_API_URLBackend API URLhttp://localhost:5243/api
+REACT_APP_APP_NAMENama aplikasiRoom Reservation System
+��� API Integration
+Frontend terhubung dengan backend melalui service layer:
 
-## Learn More
+Room Service (roomService.ts)
+MethodFungsiEndpoint
+getRooms(search, page, pageSize)List ruanganGET /rooms
+getRoomById(id)Detail ruanganGET /rooms/{id}
+createRoom(data)Tambah ruanganPOST /rooms
+updateRoom(id, data)Update ruanganPUT /rooms/{id}
+deleteRoom(id)Hapus ruanganDELETE /rooms/{id}
+Catatan Penting
+Status ruangan dikirim sebagai number: 0 (Available), 1 (UnderMaintenance), 2 (Occupied)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Response 204 No Content dari backend dihandle dengan baik
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Error 400 validation errors ditampilkan per field
+
+��� Testing Manual
+Buka halaman Rooms: http://localhost:3000/rooms
+
+Test fitur:
+
+✅ Lihat daftar ruangan (harusnya muncul data dari backend)
+
+✅ Cari ruangan dengan kata kunci
+
+✅ Klik tombol "Tambah Ruangan" → isi form → submit
+
+✅ Klik edit pada salah satu ruangan → ubah data → submit
+
+✅ Klik delete → konfirmasi → hapus
+
+✅ Cek pagination jika data > 10
+
+��� Roadmap
+v1.0.0-frontend (Selesai) ✅
+Setup project React + TypeScript
+
+Manajemen Ruangan (CRUD)
+
+Integrasi API backend
+
+Error handling dan loading states
+
+v1.1.0-frontend (Coming Soon) ⏳
+Manajemen Peminjaman (Booking CRUD)
+
+Filter pencarian peminjaman
+
+Status management (Approve/Reject)
+
+Riwayat perubahan status
+
+Dashboard dengan statistik
+
+��� Lisensi
+MIT License
+
+��� Author
+Zaky - @Zaky-123
+
+Catatan: Proyek ini adalah tugas individu PBL 2026 - Sistem Peminjaman Ruangan Kampus.
